@@ -12,13 +12,13 @@ module fpga_modbus (
 );
 
     // ============================================================
-    // Параметры
+    // Параметры платы и UART.
     // ============================================================
     localparam integer CLK_FRE   = 50;
     localparam integer BAUD_RATE = 9600;
 
     // ============================================================
-    // Кнопка
+    // Подавление дребезга кнопки key0.
     // ============================================================
     wire key_valid;
 
@@ -30,23 +30,16 @@ module fpga_modbus (
     );
 
     // ============================================================
-    // Дискретный выход с адресом 0.
-    // Кнопка переключает его состояние.
+    // Данные устройства.
     // ============================================================
-    reg coil0;
+    wire        coil0;
+    wire [15:0] holding0;
 
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n)
-            coil0 <= 1'b0;
-        else if (key_valid)
-            coil0 <= ~coil0;
-    end
-
-    // LED показывает логическое состояние coil0.
+    // Светодиод показывает состояние coil0.
     assign led = coil0;
 
     // ============================================================
-    // Байтный интерфейс UART <-> Modbus.
+    // Байтный интерфейс между UART и Modbus.
     // ============================================================
     wire [7:0] tx_data;
     wire       tx_valid;
@@ -57,7 +50,7 @@ module fpga_modbus (
     wire       rx_ready;
 
     // ============================================================
-    // UART
+    // UART.
     // ============================================================
     uart_interface #(
         .CLK_FRE    (CLK_FRE),
@@ -80,29 +73,38 @@ module fpga_modbus (
     );
 
     // ============================================================
-    // Начальный обработчик Modbus RTU.
+    // Modbus RTU.
+    //
+    // 01 — чтение coil0.
+    // 03 — чтение holding0.
+    // 05 — запись coil0.
+    // 06 — запись holding0.
     // ============================================================
     modbus_rtu_slave #(
         .CLK_FRE   (CLK_FRE),
         .BAUD_RATE (BAUD_RATE),
         .SLAVE_ID  (8'd1)
     ) u_modbus_rtu_slave (
-        .clk       (clk),
-        .rst_n     (rst_n),
+        .clk         (clk),
+        .rst_n       (rst_n),
 
-        .rx_pin    (uart_rx),
+        .rx_pin      (uart_rx),
 
-        .rx_data   (rx_data),
-        .rx_valid  (rx_valid),
-        .rx_ready  (rx_ready),
+        .rx_data     (rx_data),
+        .rx_valid    (rx_valid),
+        .rx_ready    (rx_ready),
 
-        .tx_data   (tx_data),
-        .tx_valid  (tx_valid),
-        .tx_ready  (tx_ready),
+        .tx_data     (tx_data),
+        .tx_valid    (tx_valid),
+        .tx_ready    (tx_ready),
 
-        .coil0     (coil0)
+        .coil_toggle (key_valid),
+
+        .coil0       (coil0),
+        .holding0    (holding0)
     );
 
     // key1 пока не используется.
+    // holding0 можно подключить к прикладной логике устройства.
 
 endmodule
