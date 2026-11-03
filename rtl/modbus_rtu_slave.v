@@ -1,42 +1,50 @@
 module modbus_rtu_slave #(
-    parameter integer CLK_FRE   = 50,
-    parameter integer BAUD_RATE = 9600,
-    parameter [7:0]   SLAVE_ID  = 8'd1
-)(
-    input             clk,
-    input             rst_n,
+    parameter integer CLK_FRE       = 50,
+    parameter integer BAUD_RATE     = 9600,
+    parameter [7:0]   SLAVE_ID      = 8'd1,
 
-    // Физическая линия RX для контроля активности.
-    input             rx_pin,
+    parameter integer COIL_COUNT    = 16,
+    parameter integer HOLDING_COUNT = 32
+)(
+    input clk,
+    input rst_n,
+
+    // Физическая линия UART RX.
+    input rx_pin,
 
     // Принятые байты от UART.
-    input      [7:0]  rx_data,
-    input             rx_valid,
-    output            rx_ready,
+    input  [7:0] rx_data,
+    input        rx_valid,
+    output       rx_ready,
 
     // Передаваемые байты в UART.
-    output     [7:0]  tx_data,
-    output            tx_valid,
-    input             tx_ready,
+    output [7:0] tx_data,
+    output       tx_valid,
+    input        tx_ready,
 
-    // Однотактный импульс от кнопки.
-    input             coil_toggle,
+    // Кнопка переключает выход с адресом 0.
+    input coil_toggle,
 
-    // Дискретный выход с адресом 0.
-    output reg        coil0,
+    // Банк дискретных выходов.
+    output reg [COIL_COUNT-1:0] coils,
 
-    // Holding-регистр с адресом 0.
-    output reg [15:0] holding0 /* synthesis preserve */
+    // Плоская шина holding-регистров.
+    //
+    // Регистр 0: [15:0]
+    // Регистр 1: [31:16]
+    // Регистр 2: [47:32]
+    // ...
+    output [HOLDING_COUNT*16-1:0] holding_values
 );
 
     // ============================================================
-    // Таймер конца кадра.
+    // Настройки таймера конца кадра.
     //
-    // Текущий формат UART: 8N1.
+    // Формат UART: 8N1.
     // Один символ = 10 бит.
     // Пауза 3.5 символа = 35 бит.
     //
-    // Эта начальная реализация используется при 9600 бод.
+    // Начальная реализация для стенда на 9600 бод.
     // ============================================================
     localparam integer CLK_HZ = CLK_FRE * 1000000;
 
@@ -52,8 +60,22 @@ module modbus_rtu_slave #(
     reg state;
 
     // ============================================================
+    // Holding-регистры.
+    // ============================================================
+    reg [15:0] holding_regs [0:HOLDING_COUNT-1];
+
+    // Вывод массива в плоскую шину.
+    genvar g;
+
+    generate
+        for (g = 0; g < HOLDING_COUNT; g = g + 1) begin : GEN_HOLDING
+            assign holding_values[g*16 +: 16] = holding_regs[g];
+        end
+    endgenerate
+
+    // ============================================================
     // Синхронизация физической линии RX.
-    // Используется только для контроля активности линии.
+    // Используется для контроля активности линии.
     // ============================================================
     reg rx_meta;
     reg rx_sync;
@@ -72,7 +94,7 @@ module modbus_rtu_slave #(
     // ============================================================
     // Буфер запроса.
     //
-    // Все поддерживаемые запросы имеют длину 8 байт.
+    // Поддерживаемые запросы имеют длину 8 байт.
     // ============================================================
     reg [7:0] request [0:7];
 
@@ -98,14 +120,30 @@ module modbus_rtu_slave #(
     wire rx_fire;
     wire tx_fire;
 
-    // Входящие байты всегда потребляются.
-    // Во время ST_SEND они не включаются в новый запрос.
     assign rx_ready = 1'b1;
     assign rx_fire  = rx_valid && rx_ready;
 
     assign tx_valid = (state == ST_SEND);
     assign tx_data  = response[tx_index];
     assign tx_fire  = tx_valid && tx_ready;
+
+    // ============================================================
+    // Поля запроса.
+    // ============================================================
+    wire [15:0] request_address;
+    wire [15:0] request_value;
+
+    assign request_address = {
+        request[2],
+        request[3]
+    };
+
+    // Для чтения — количество.
+    // Для записи — записываемое значение.
+    assign request_value = {
+        request[4],
+        request[5]
+    };
 
     // ============================================================
     // CRC16 Modbus: обработка одного байта.
@@ -175,20 +213,35 @@ module modbus_rtu_slave #(
     endfunction
 
     // ============================================================
-    // Данные и CRC ответов чтения.
-    // При формировании ответа они сохраняются в response[].
+    // Выбор данных для чтения.
+    //
+    // Сначала проверяется диапазон адреса.
     // ============================================================
-    wire [7:0]  coil_read_value;
+    reg [7:0]  selected_coil;
+    reg [15:0] selected_holding;
+
+    always @(*) begin
+        selected_coil    = 8'h00;
+        selected_holding = 16'h0000;
+
+        if (request_address < COIL_COUNT)
+            selected_coil = {
+                7'b0000000,
+                coils[request_address]
+            };
+
+        if (request_address < HOLDING_COUNT)
+            selected_holding = holding_regs[request_address];
+    end
+
     wire [15:0] coil_read_crc;
     wire [15:0] register_read_crc;
 
-    assign coil_read_value = {7'b0000000, coil0};
-
     assign coil_read_crc =
-        make_coil_read_crc(coil_read_value);
+        make_coil_read_crc(selected_coil);
 
     assign register_read_crc =
-        make_register_read_crc(holding0);
+        make_register_read_crc(selected_holding);
 
     integer n;
 
@@ -207,8 +260,10 @@ module modbus_rtu_slave #(
             response_length  <= 4'd0;
             tx_index         <= 3'd0;
 
-            coil0            <= 1'b0;
-            holding0         <= 16'h0000;
+            coils <= {COIL_COUNT{1'b0}};
+
+            for (n = 0; n < HOLDING_COUNT; n = n + 1)
+                holding_regs[n] <= 16'h0000;
 
             for (n = 0; n < 8; n = n + 1) begin
                 request[n]  <= 8'h00;
@@ -217,12 +272,12 @@ module modbus_rtu_slave #(
         end
         else begin
 
-            // Переключение coil0 кнопкой.
+            // Кнопка переключает первый дискретный выход.
             //
-            // Если одновременно выполняется запись функцией 05,
-            // приоритет имеет запись Modbus ниже.
+            // При одновременной записи в него функцией 05
+            // приоритет имеет Modbus.
             if (coil_toggle)
-                coil0 <= ~coil0;
+                coils[0] <= ~coils[0];
 
             case (state)
 
@@ -234,8 +289,7 @@ module modbus_rtu_slave #(
                     if (rx_fire) begin
                         gap_counter <= 32'd0;
 
-                        // Обрабатывается весь кадр,
-                        // включая два байта CRC.
+                        // CRC по всему кадру, включая CRC запроса.
                         request_crc <=
                             crc16_byte(request_crc, rx_data);
 
@@ -251,7 +305,6 @@ module modbus_rtu_slave #(
                     end
                     else if (!rx_sync) begin
 
-                        // Линия активна: паузы пока нет.
                         gap_counter <= 32'd0;
                     end
                     else if (gap_counter < FRAME_GAP_TICKS) begin
@@ -261,11 +314,7 @@ module modbus_rtu_slave #(
                     else if (request_count != 4'd0) begin
 
                         // ----------------------------------------
-                        // Общая проверка:
-                        // - ровно 8 байт;
-                        // - нет переполнения;
-                        // - корректный CRC;
-                        // - совпадает адрес устройства.
+                        // Общая проверка запроса.
                         // ----------------------------------------
                         if (
                             !request_overflow &&
@@ -277,21 +326,19 @@ module modbus_rtu_slave #(
                             // ------------------------------------
                             // 01: Read Coils.
                             //
-                            // Адрес: 0.
-                            // Количество: 1.
+                            // Чтение одного выхода.
                             // ------------------------------------
                             if (
                                 (request[1] == 8'h01) &&
-                                (request[2] == 8'h00) &&
-                                (request[3] == 8'h00) &&
-                                (request[4] == 8'h00) &&
-                                (request[5] == 8'h01)
+                                (request_address < COIL_COUNT) &&
+                                (request_value == 16'd1)
                             ) begin
 
                                 response[0] <= SLAVE_ID;
                                 response[1] <= 8'h01;
                                 response[2] <= 8'h01;
-                                response[3] <= coil_read_value;
+                                response[3] <= selected_coil;
+
                                 response[4] <= coil_read_crc[7:0];
                                 response[5] <= coil_read_crc[15:8];
 
@@ -303,23 +350,23 @@ module modbus_rtu_slave #(
                             // ------------------------------------
                             // 03: Read Holding Registers.
                             //
-                            // Адрес: 0.
-                            // Количество: 1.
+                            // Чтение одного регистра.
                             // ------------------------------------
                             else if (
                                 (request[1] == 8'h03) &&
-                                (request[2] == 8'h00) &&
-                                (request[3] == 8'h00) &&
-                                (request[4] == 8'h00) &&
-                                (request[5] == 8'h01)
+                                (request_address < HOLDING_COUNT) &&
+                                (request_value == 16'd1)
                             ) begin
 
                                 response[0] <= SLAVE_ID;
                                 response[1] <= 8'h03;
                                 response[2] <= 8'h02;
 
-                                response[3] <= holding0[15:8];
-                                response[4] <= holding0[7:0];
+                                response[3] <=
+                                    selected_holding[15:8];
+
+                                response[4] <=
+                                    selected_holding[7:0];
 
                                 response[5] <=
                                     register_read_crc[7:0];
@@ -335,22 +382,20 @@ module modbus_rtu_slave #(
                             // ------------------------------------
                             // 05: Write Single Coil.
                             //
-                            // Адрес: 0.
                             // FF00 — включить.
                             // 0000 — выключить.
                             // ------------------------------------
                             else if (
                                 (request[1] == 8'h05) &&
-                                (request[2] == 8'h00) &&
-                                (request[3] == 8'h00) &&
-                                (request[5] == 8'h00) &&
+                                (request_address < COIL_COUNT) &&
                                 (
-                                    (request[4] == 8'hFF) ||
-                                    (request[4] == 8'h00)
+                                    (request_value == 16'hFF00) ||
+                                    (request_value == 16'h0000)
                                 )
                             ) begin
 
-                                coil0 <= (request[4] == 8'hFF);
+                                coils[request_address] <=
+                                    (request_value == 16'hFF00);
 
                                 // Ответ повторяет запрос.
                                 for (n = 0; n < 8; n = n + 1)
@@ -364,20 +409,15 @@ module modbus_rtu_slave #(
                             // ------------------------------------
                             // 06: Preset Single Register.
                             //
-                            // Адрес: 0.
-                            // request[4] — старший байт.
-                            // request[5] — младший байт.
+                            // Запись одного holding-регистра.
                             // ------------------------------------
                             else if (
                                 (request[1] == 8'h06) &&
-                                (request[2] == 8'h00) &&
-                                (request[3] == 8'h00)
+                                (request_address < HOLDING_COUNT)
                             ) begin
 
-                                holding0 <= {
-                                    request[4],
-                                    request[5]
-                                };
+                                holding_regs[request_address] <=
+                                    request_value;
 
                                 // Ответ повторяет запрос.
                                 for (n = 0; n < 8; n = n + 1)
@@ -400,8 +440,6 @@ module modbus_rtu_slave #(
 
                 // ================================================
                 // Передача ответа в UART FIFO.
-                //
-                // Пока tx_ready = 0, индекс и данные сохраняются.
                 // ================================================
                 ST_SEND: begin
                     gap_counter <= 32'd0;
@@ -412,12 +450,10 @@ module modbus_rtu_slave #(
                             {1'b0, tx_index} ==
                             (response_length - 4'd1)
                         ) begin
-
                             tx_index <= 3'd0;
                             state    <= ST_RECEIVE;
                         end
                         else begin
-
                             tx_index <= tx_index + 1'b1;
                         end
                     end

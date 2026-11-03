@@ -18,7 +18,19 @@ module fpga_modbus (
     localparam integer BAUD_RATE = 9600;
 
     // ============================================================
-    // Подавление дребезга кнопки key0.
+    // Количество объектов Modbus.
+    //
+    // Значения должны быть не меньше 1.
+    //
+    // Например:
+    // COIL_COUNT = 16    -> адреса 0...15
+    // HOLDING_COUNT = 32 -> адреса 0...31
+    // ============================================================
+    localparam integer COIL_COUNT    = 16;
+    localparam integer HOLDING_COUNT = 32;
+
+    // ============================================================
+    // Кнопка key0.
     // ============================================================
     wire key_valid;
 
@@ -32,14 +44,15 @@ module fpga_modbus (
     // ============================================================
     // Данные устройства.
     // ============================================================
-    wire        coil0;
-    wire [15:0] holding0;
+    wire [COIL_COUNT-1:0] coils;
 
-    // Светодиод показывает состояние coil0.
-    assign led = coil0;
+    wire [HOLDING_COUNT*16-1:0] holding_values;
+
+    // Светодиод показывает состояние выхода с адресом 0.
+    assign led = coils[0];
 
     // ============================================================
-    // Байтный интерфейс между UART и Modbus.
+    // Байтный интерфейс UART <-> Modbus.
     // ============================================================
     wire [7:0] tx_data;
     wire       tx_valid;
@@ -74,37 +87,34 @@ module fpga_modbus (
 
     // ============================================================
     // Modbus RTU.
-    //
-    // 01 — чтение coil0.
-    // 03 — чтение holding0.
-    // 05 — запись coil0.
-    // 06 — запись holding0.
     // ============================================================
     modbus_rtu_slave #(
-        .CLK_FRE   (CLK_FRE),
-        .BAUD_RATE (BAUD_RATE),
-        .SLAVE_ID  (8'd1)
+        .CLK_FRE       (CLK_FRE),
+        .BAUD_RATE     (BAUD_RATE),
+        .SLAVE_ID      (8'd1),
+
+        .COIL_COUNT    (COIL_COUNT),
+        .HOLDING_COUNT (HOLDING_COUNT)
     ) u_modbus_rtu_slave (
-        .clk         (clk),
-        .rst_n       (rst_n),
+        .clk            (clk),
+        .rst_n          (rst_n),
 
-        .rx_pin      (uart_rx),
+        .rx_pin         (uart_rx),
 
-        .rx_data     (rx_data),
-        .rx_valid    (rx_valid),
-        .rx_ready    (rx_ready),
+        .rx_data        (rx_data),
+        .rx_valid       (rx_valid),
+        .rx_ready       (rx_ready),
 
-        .tx_data     (tx_data),
-        .tx_valid    (tx_valid),
-        .tx_ready    (tx_ready),
+        .tx_data        (tx_data),
+        .tx_valid       (tx_valid),
+        .tx_ready       (tx_ready),
 
-        .coil_toggle (key_valid),
+        .coil_toggle    (key_valid),
 
-        .coil0       (coil0),
-        .holding0    (holding0)
+        .coils          (coils),
+        .holding_values (holding_values)
     );
 
     // key1 пока не используется.
-    // holding0 можно подключить к прикладной логике устройства.
 
 endmodule
