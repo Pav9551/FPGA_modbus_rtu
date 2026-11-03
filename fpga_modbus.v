@@ -12,20 +12,13 @@ module fpga_modbus (
 );
 
     // ============================================================
-    // Параметры платы и UART
+    // Параметры
     // ============================================================
-    // Частота входного clk в MHz.
     localparam integer CLK_FRE   = 50;
     localparam integer BAUD_RATE = 9600;
 
     // ============================================================
-    // Подавление дребезга кнопки key0.
-    //
-    // key0:
-    //   1 — кнопка отпущена;
-    //   0 — кнопка нажата.
-    //
-    // key_valid — однотактный импульс при нажатии.
+    // Кнопка key0
     // ============================================================
     wire key_valid;
 
@@ -37,64 +30,90 @@ module fpga_modbus (
     );
 
     // ============================================================
-    // Интерфейс передачи UART
+    // Байтный интерфейс.
+    //
+    // В дальнейшем эти сигналы будут подключены
+    // к отдельному модулю протокола.
     // ============================================================
-    reg  app_tx_valid;
+    wire [7:0] tx_data;
+    reg        tx_valid;
+    wire       tx_ready;
 
-    wire app_tx_ready;
-    wire app_tx_fire;
+    wire [7:0] rx_data;
+    wire       rx_valid;
+    wire       rx_ready;
 
-    assign app_tx_fire = app_tx_valid && app_tx_ready;
+    wire tx_fire;
+    wire rx_fire;
 
-    uart_stream_tx #(
-        .FIFO_DEPTH (64),
+    assign tx_fire = tx_valid && tx_ready;
+    assign rx_fire = rx_valid && rx_ready;
+
+    // ============================================================
+    // UART-интерфейс
+    // ============================================================
+    uart_interface #(
         .CLK_FRE    (CLK_FRE),
-        .BAUD_RATE  (BAUD_RATE)
-    ) u_uart_stream_tx (
-        .clk        (clk),
-        .rst_n      (rst_n),
+        .BAUD_RATE  (BAUD_RATE),
+        .FIFO_DEPTH (64)
+    ) u_uart_interface (
+        .clk         (clk),
+        .rst_n       (rst_n),
 
-        .data_in    (8'h41),      // Символ "A"
-        .data_valid (app_tx_valid),
-        .data_ready (app_tx_ready),
+        .uart_rx_pin (uart_rx),
+        .uart_tx_pin (uart_tx),
 
-        .uart_tx    (uart_tx)
+        .tx_data     (tx_data),
+        .tx_valid    (tx_valid),
+        .tx_ready    (tx_ready),
+
+        .rx_data     (rx_data),
+        .rx_valid    (rx_valid),
+        .rx_ready    (rx_ready)
     );
 
     // ============================================================
-    // Один запрос передачи на одно нажатие.
+    // Временная прикладная логика:
+    // отправка "A" по нажатию key0.
     //
-    // До готовности UART запрос остаётся установленным.
-    // Если одновременно принят предыдущий символ и пришло
-    // новое нажатие, запрос сохраняется для нового символа.
+    // В дальнейшем этот блок заменяется модулем протокола.
     // ============================================================
+    assign tx_data = 8'h42;
+
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            app_tx_valid <= 1'b0;
+            tx_valid <= 1'b0;
         end
         else begin
             if (key_valid)
-                app_tx_valid <= 1'b1;
-            else if (app_tx_fire)
-                app_tx_valid <= 1'b0;
+                tx_valid <= 1'b1;
+            else if (tx_fire)
+                tx_valid <= 1'b0;
         end
     end
 
     // ============================================================
-    // Светодиод меняет состояние, когда uart_stream_tx
-    // принимает очередной символ для отправки.
+    // Временная прикладная логика:
+    // всегда готовы принять байт.
+    // ============================================================
+    assign rx_ready = 1'b1;
+
+    // ============================================================
+    // Светодиод переключается при получении каждого байта.
     // ============================================================
     reg led_state;
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n)
             led_state <= 1'b0;
-        else if (app_tx_fire)
+        else if (rx_fire)
             led_state <= ~led_state;
     end
 
     assign led = led_state;
+	 //assign led = 1'b1;
 
-    // uart_rx и key1 в этой версии не используются.
+    // key1 пока не используется.
+    // rx_data содержит принятый байт.
 
 endmodule
