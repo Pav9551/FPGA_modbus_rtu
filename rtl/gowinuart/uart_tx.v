@@ -1,0 +1,96 @@
+module uart_tx #(
+    parameter integer CLK_FRE   = 50,
+    parameter integer BAUD_RATE = 9600
+)(
+    input             clk,
+    input             rst_n,
+    input      [7:0]  tx_data,
+    input             tx_data_valid,
+    output            tx_data_ready,
+    output            tx_pin,
+    output            tx_busy
+);
+
+    localparam integer CYCLE = CLK_FRE * 1000000 / BAUD_RATE;
+    localparam integer CNT_W = (CYCLE <= 1) ? 1 : $clog2(CYCLE);
+
+    initial begin
+        if (CYCLE < 2)
+            $error("UART CYCLE must be >= 2");
+    end
+
+    localparam [1:0] S_IDLE  = 2'd0;
+    localparam [1:0] S_START = 2'd1;
+    localparam [1:0] S_DATA  = 2'd2;
+    localparam [1:0] S_STOP  = 2'd3;
+
+    reg [1:0] state, next_state;
+    reg [CNT_W-1:0] cycle_cnt;
+    reg [2:0] bit_cnt;
+    reg [7:0] tx_data_latch;
+    reg       tx_reg;
+
+    wire bit_tick = (cycle_cnt == (CYCLE - 1));
+    wire tx_fire  = tx_data_valid && tx_data_ready;
+
+    assign tx_data_ready = (state == S_IDLE);
+    assign tx_busy       = (state != S_IDLE);
+    assign tx_pin        = tx_reg;
+
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n)
+            state <= S_IDLE;
+        else
+            state <= next_state;
+    end
+
+    always @(*) begin
+        case (state)
+            S_IDLE:  next_state = tx_data_valid ? S_START : S_IDLE;
+            S_START: next_state = bit_tick ? S_DATA : S_START;
+            S_DATA:  next_state = (bit_tick && (bit_cnt == 3'd7)) ? S_STOP : S_DATA;
+            S_STOP:  next_state = bit_tick ? S_IDLE : S_STOP;
+            default: next_state = S_IDLE;
+        endcase
+    end
+
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n)
+            cycle_cnt <= {CNT_W{1'b0}};
+        else if (state == S_IDLE || bit_tick)
+            cycle_cnt <= {CNT_W{1'b0}};
+        else
+            cycle_cnt <= cycle_cnt + 1'b1;
+    end
+
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n)
+            tx_data_latch <= 8'd0;
+        else if (tx_fire)
+            tx_data_latch <= tx_data;
+    end
+
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n)
+            bit_cnt <= 3'd0;
+        else if (state == S_DATA) begin
+            if (bit_tick)
+                bit_cnt <= bit_cnt + 1'b1;
+        end else
+            bit_cnt <= 3'd0;
+    end
+
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            tx_reg <= 1'b1;
+        end else begin
+            case (next_state)
+                S_IDLE, S_STOP: tx_reg <= 1'b1;
+                S_START:        tx_reg <= 1'b0;
+                S_DATA:         tx_reg <= tx_data_latch[bit_cnt];
+                default:         tx_reg <= 1'b1;
+            endcase
+        end
+    end
+
+endmodule
