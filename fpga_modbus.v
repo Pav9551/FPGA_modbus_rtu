@@ -8,7 +8,34 @@ module fpga_modbus (
     input  key0,
     input  key1,
 
-    output led
+    output led,
+	 
+/*	| PIN | CRATE |
+	|-----|-------|
+	| D4  |  C5   |
+	| C3  |  C6   |
+	| D3  |  C7   |
+	| D5  |  C8   |
+	| E5  |  C9   |
+	| F3  |  --   |
+	| F5  |  C11  |
+	| L6  |  C12  |
+	| K6  |  C10  |
+	
+	| XX  |  C14  |
+	| XX  |  C15  |
+	| XX  |  C16  |
+	| XX  |  C17  |
+	| XX  |  C18  |
+	| XX  |  C24  |*/
+	output Pin_C5,
+	output Pin_C6,
+	output Pin_C7,
+	output Pin_C8,
+	output Pin_C9,
+	output Pin_C10,
+	output Pin_C11,
+	output Pin_C12
 );
 
     // ============================================================
@@ -40,6 +67,18 @@ module fpga_modbus (
         .key_n     (key0),
         .key_valid (key_valid)
     );
+	 // ============================================================
+    // Мигание Pin_C10.
+    // ============================================================
+    /*led_blink #(
+        .CLK_FREQ_HZ    (CLK_FRE * 1_000_000),
+        .HALF_PERIOD_MS (500)
+    ) u_led_blink (
+        .clk       (clk),
+        .rst_n     (rst_n),
+        .blink_out (Pin_C10)
+    );*/
+
 
     // ============================================================
     // Данные устройства.
@@ -49,7 +88,16 @@ module fpga_modbus (
     wire [HOLDING_COUNT*16-1:0] holding_values;
 
     // Светодиод показывает состояние выхода с адресом 0.
-    assign led = coils[0];
+    assign led =  coils[0];
+	 assign Pin_C5 = 8'd0;
+	 assign Pin_C6 = 8'd0;//+Pin_C16
+	 assign Pin_C7 = 8'd0;
+	 assign Pin_C8 = 8'd0;
+	 assign Pin_C9 = 8'd0;//+Pin_C26
+	 //assign Pin_C10 = 8'd0;
+	 assign Pin_C11 = 8'd0;
+	 assign Pin_C12 = 8'd0;
+	 //assign Pin_C13 = 8'd0;
 
     // ============================================================
     // Байтный интерфейс UART <-> Modbus.

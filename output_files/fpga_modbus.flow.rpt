@@ -1,5 +1,5 @@
 Flow report for fpga_modbus
-Tue Nov 03 17:33:45 2026
+Mon Nov 09 01:06:49 2026
 Quartus II 64-Bit Version 13.1.0 Build 162 10/23/2013 SJ Web Edition
 
 
@@ -40,20 +40,20 @@ applicable agreement for further details.
 +---------------------------------------------------------------------------------+
 ; Flow Summary                                                                    ;
 +------------------------------------+--------------------------------------------+
-; Flow Status                        ; Successful - Tue Nov 03 17:33:42 2026      ;
+; Flow Status                        ; Successful - Mon Nov 09 01:06:46 2026      ;
 ; Quartus II 64-Bit Version          ; 13.1.0 Build 162 10/23/2013 SJ Web Edition ;
 ; Revision Name                      ; fpga_modbus                                ;
 ; Top-level Entity Name              ; fpga_modbus                                ;
 ; Family                             ; Cyclone IV E                               ;
 ; Device                             ; EP4CE6F17C8                                ;
 ; Timing Models                      ; Final                                      ;
-; Total logic elements               ; 128 / 6,272 ( 2 % )                        ;
-;     Total combinational functions  ; 111 / 6,272 ( 2 % )                        ;
-;     Dedicated logic registers      ; 92 / 6,272 ( 1 % )                         ;
-; Total registers                    ; 92                                         ;
-; Total pins                         ; 7 / 180 ( 4 % )                            ;
+; Total logic elements               ; 1,166 / 6,272 ( 19 % )                     ;
+;     Total combinational functions  ; 845 / 6,272 ( 13 % )                       ;
+;     Dedicated logic registers      ; 867 / 6,272 ( 14 % )                       ;
+; Total registers                    ; 867                                        ;
+; Total pins                         ; 15 / 180 ( 8 % )                           ;
 ; Total virtual pins                 ; 0                                          ;
-; Total memory bits                  ; 128 / 276,480 ( < 1 % )                    ;
+; Total memory bits                  ; 512 / 276,480 ( < 1 % )                    ;
 ; Embedded Multiplier 9-bit elements ; 0 / 30 ( 0 % )                             ;
 ; Total PLLs                         ; 0 / 2 ( 0 % )                              ;
 +------------------------------------+--------------------------------------------+
@@ -64,7 +64,7 @@ applicable agreement for further details.
 +-------------------+---------------------+
 ; Option            ; Setting             ;
 +-------------------+---------------------+
-; Start date & time ; 11/03/2026 17:33:31 ;
+; Start date & time ; 11/09/2026 01:06:25 ;
 ; Main task         ; Compilation         ;
 ; Revision Name     ; fpga_modbus         ;
 +-------------------+---------------------+
@@ -75,7 +75,8 @@ applicable agreement for further details.
 +-------------------------------------+---------------------------------------+---------------+-------------+------------+
 ; Assignment Name                     ; Value                                 ; Default Value ; Entity Name ; Section Id ;
 +-------------------------------------+---------------------------------------+---------------+-------------+------------+
-; COMPILER_SIGNATURE_ID               ; 269322047980111.179371641106716       ; --            ; --          ; --         ;
+; COMPILER_SIGNATURE_ID               ; 269322047980111.179417558505304       ; --            ; --          ; --         ;
+; ENABLE_SIGNALTAP                    ; On                                    ; --            ; --          ; --         ;
 ; MAX_CORE_JUNCTION_TEMP              ; 85                                    ; --            ; --          ; --         ;
 ; MIN_CORE_JUNCTION_TEMP              ; 0                                     ; --            ; --          ; --         ;
 ; PARTITION_COLOR                     ; 16764057                              ; --            ; --          ; Top        ;
@@ -84,6 +85,7 @@ applicable agreement for further details.
 ; POWER_BOARD_THERMAL_MODEL           ; None (CONSERVATIVE)                   ; --            ; --          ; --         ;
 ; POWER_PRESET_COOLING_SOLUTION       ; 23 MM HEAT SINK WITH 200 LFPM AIRFLOW ; --            ; --          ; --         ;
 ; PROJECT_OUTPUT_DIRECTORY            ; output_files                          ; --            ; --          ; --         ;
+; USE_SIGNALTAP_FILE                  ; output_files/stp1.stp                 ; --            ; --          ; --         ;
 +-------------------------------------+---------------------------------------+---------------+-------------+------------+
 
 
@@ -92,11 +94,11 @@ applicable agreement for further details.
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
 ; Module Name               ; Elapsed Time ; Average Processors Used ; Peak Virtual Memory ; Total CPU Time (on all processors) ;
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
-; Analysis & Synthesis      ; 00:00:02     ; 1.0                     ; 4659 MB             ; 00:00:01                           ;
-; Fitter                    ; 00:00:05     ; 1.0                     ; 5339 MB             ; 00:00:06                           ;
-; Assembler                 ; 00:00:01     ; 1.0                     ; 4600 MB             ; 00:00:01                           ;
-; TimeQuest Timing Analyzer ; 00:00:02     ; 1.0                     ; 4671 MB             ; 00:00:02                           ;
-; Total                     ; 00:00:10     ; --                      ; --                  ; 00:00:10                           ;
+; Analysis & Synthesis      ; 00:00:04     ; 1.0                     ; 4662 MB             ; 00:00:05                           ;
+; Fitter                    ; 00:00:12     ; 2.1                     ; 5379 MB             ; 00:00:14                           ;
+; Assembler                 ; 00:00:02     ; 1.0                     ; 4596 MB             ; 00:00:01                           ;
+; TimeQuest Timing Analyzer ; 00:00:02     ; 1.0                     ; 4688 MB             ; 00:00:03                           ;
+; Total                     ; 00:00:20     ; --                      ; --                  ; 00:00:23                           ;
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
 
 
