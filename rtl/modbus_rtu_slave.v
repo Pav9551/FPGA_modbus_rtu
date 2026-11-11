@@ -1,10 +1,14 @@
 module modbus_rtu_slave #(
     parameter integer CLK_FRE       = 50,
     parameter integer BAUD_RATE     = 9600,
-    parameter [7:0]   SLAVE_ID      = 8'd1,
+    parameter [7:0]   SLAVE_ID       = 8'd1,
 
     parameter integer COIL_COUNT    = 16,
-    parameter integer HOLDING_COUNT = 32
+    parameter integer HOLDING_COUNT = 32,
+
+    // Начальные состояния coils.
+    // По умолчанию все выходы выключены.
+    parameter [COIL_COUNT-1:0] COILS_INIT = {COIL_COUNT{1'b0}}
 )(
     input clk,
     input rst_n,
@@ -26,7 +30,8 @@ module modbus_rtu_slave #(
     input coil_toggle,
 
     // Банк дискретных выходов.
-    output reg [COIL_COUNT-1:0] coils,
+    // Начальное значение после конфигурации FPGA.
+    output reg [COIL_COUNT-1:0] coils = COILS_INIT,
 
     // Плоская шина holding-регистров.
     //
@@ -260,7 +265,8 @@ module modbus_rtu_slave #(
             response_length  <= 4'd0;
             tx_index         <= 3'd0;
 
-            coils <= {COIL_COUNT{1'b0}};
+            // Восстановление начальных состояний coils.
+            coils <= COILS_INIT;
 
             for (n = 0; n < HOLDING_COUNT; n = n + 1)
                 holding_regs[n] <= 16'h0000;
@@ -304,11 +310,9 @@ module modbus_rtu_slave #(
                         end
                     end
                     else if (!rx_sync) begin
-
                         gap_counter <= 32'd0;
                     end
                     else if (gap_counter < FRAME_GAP_TICKS) begin
-
                         gap_counter <= gap_counter + 1'b1;
                     end
                     else if (request_count != 4'd0) begin

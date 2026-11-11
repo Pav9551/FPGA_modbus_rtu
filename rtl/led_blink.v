@@ -1,6 +1,6 @@
 module led_blink #(
     parameter integer CLK_FREQ_HZ    = 50000000,
-    parameter integer HALF_PERIOD_MS = 500
+    parameter integer HALF_PERIOD_MS = 1000
 )(
     input  wire clk,
     input  wire rst_n,

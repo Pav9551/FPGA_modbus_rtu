@@ -4,7 +4,7 @@ JedecChain;
 	DefaultMfr(6E);
 
 	P ActionCode(Cfg)
-		Device PartName(EP4CE10) Path("C:/work/Altera_STM32/FPGA_modbus_rtu/output_files/") File("output_file.jic") MfrSpec(OpMask(1) SEC_Device(EPCS4) Child_OpMask(1 3));
+		Device PartName(EP4CE6F17) Path("C:/work/Altera_STM32/FPGA_modbus_rtu/output_files/") File("fpga_modbus.sof") MfrSpec(OpMask(1));
 
 ChainEnd;
 

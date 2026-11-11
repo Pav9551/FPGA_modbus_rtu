@@ -55,12 +55,15 @@ module fpga_modbus (
     // ============================================================
     localparam integer COIL_COUNT    = 16;
     localparam integer HOLDING_COUNT = 32;
+    // Инициализация
+	 localparam [COIL_COUNT-1:0] COILS_INIT =
+    16'b0000_0010_1110_0000;
 
     // ============================================================
     // Кнопка key0.
     // ============================================================
     wire key_valid;
-
+    wire blink_out;
     key_jitter u_key_jitter (
         .clk       (clk),
         .rst_n     (rst_n),
@@ -70,15 +73,15 @@ module fpga_modbus (
 	 // ============================================================
     // Мигание Pin_C10.
     // ============================================================
-    /*led_blink #(
+    led_blink #(
         .CLK_FREQ_HZ    (CLK_FRE * 1_000_000),
         .HALF_PERIOD_MS (500)
     ) u_led_blink (
         .clk       (clk),
         .rst_n     (rst_n),
-        .blink_out (Pin_C10)
-    );*/
-
+        .blink_out (blink_out)
+    );
+    
 
     // ============================================================
     // Данные устройства.
@@ -86,17 +89,29 @@ module fpga_modbus (
     wire [COIL_COUNT-1:0] coils;
 
     wire [HOLDING_COUNT*16-1:0] holding_values;
+	 wire tc_status;
+	 wire bc_status;
 
-    // Светодиод показывает состояние выхода с адресом 0.
-    assign led =  coils[0];
-	 assign Pin_C5 = 8'd0;
-	 assign Pin_C6 = 8'd0;//+Pin_C16
-	 assign Pin_C7 = 8'd0;
-	 assign Pin_C8 = 8'd0;
-	 assign Pin_C9 = 8'd0;//+Pin_C26
+	 // Светодиод показывает выход TC блока управления возбуждением.
+	 assign led = tc_status;
+	 //assign coils[10] = tc_status;
+	 generator_excitation_control u_excitation (
+    .BOT_CONTROL (coils[6]),
+    .TOP_CONTROL (coils[7]),
+    .EXC_TRIP    (coils[8]),
+    .PROTECTIONS(coils[9]),
+    .TC         (tc_status),
+    .BC         (bc_status)
+)   ;
+	 
+	 assign Pin_C5 = coils[5];
+	 assign Pin_C6 = coils[6];//+Pin_C16
+	 assign Pin_C7 = coils[7];
+	 assign Pin_C8 =coils[8];
+	 assign Pin_C9 = coils[9];//+Pin_C26
 	 //assign Pin_C10 = 8'd0;
-	 assign Pin_C11 = 8'd0;
-	 assign Pin_C12 = 8'd0;
+	 //assign Pin_C11 = coils[11];
+	 //assign Pin_C12 = coils[12];
 	 //assign Pin_C13 = 8'd0;
 
     // ============================================================
@@ -137,32 +152,34 @@ module fpga_modbus (
     // Modbus RTU.
     // ============================================================
     modbus_rtu_slave #(
-        .CLK_FRE       (CLK_FRE),
-        .BAUD_RATE     (BAUD_RATE),
-        .SLAVE_ID      (8'd1),
+    .CLK_FRE       (CLK_FRE),
+    .BAUD_RATE     (BAUD_RATE),
+    .SLAVE_ID      (8'd1),
 
-        .COIL_COUNT    (COIL_COUNT),
-        .HOLDING_COUNT (HOLDING_COUNT)
-    ) u_modbus_rtu_slave (
-        .clk            (clk),
-        .rst_n          (rst_n),
+    .COIL_COUNT    (COIL_COUNT),
+    .HOLDING_COUNT (HOLDING_COUNT),
 
-        .rx_pin         (uart_rx),
+    // Для проверки: только coils[5] = 1.
+    .COILS_INIT    (COILS_INIT)
+) u_modbus_rtu_slave (
+    .clk            (clk),
+    .rst_n          (rst_n),
 
-        .rx_data        (rx_data),
-        .rx_valid       (rx_valid),
-        .rx_ready       (rx_ready),
+    .rx_pin         (uart_rx),
 
-        .tx_data        (tx_data),
-        .tx_valid       (tx_valid),
-        .tx_ready       (tx_ready),
+    .rx_data        (rx_data),
+    .rx_valid       (rx_valid),
+    .rx_ready       (rx_ready),
 
-        .coil_toggle    (key_valid),
+    .tx_data        (tx_data),
+    .tx_valid       (tx_valid),
+    .tx_ready       (tx_ready),
 
-        .coils          (coils),
-        .holding_values (holding_values)
-    );
+    .coil_toggle    (key_valid),
 
+    .coils          (coils),
+    .holding_values (holding_values)
+);
     // key1 пока не используется.
 
 endmodule
