@@ -1,5 +1,5 @@
 Flow report for fpga_modbus
-Wed Nov 11 19:19:05 2026
+Tue Nov 17 19:12:40 2026
 Quartus II 64-Bit Version 13.1.0 Build 162 10/23/2013 SJ Web Edition
 
 
@@ -40,20 +40,20 @@ applicable agreement for further details.
 +---------------------------------------------------------------------------------+
 ; Flow Summary                                                                    ;
 +------------------------------------+--------------------------------------------+
-; Flow Status                        ; Successful - Wed Nov 11 19:19:01 2026      ;
+; Flow Status                        ; Successful - Tue Nov 17 19:12:36 2026      ;
 ; Quartus II 64-Bit Version          ; 13.1.0 Build 162 10/23/2013 SJ Web Edition ;
 ; Revision Name                      ; fpga_modbus                                ;
 ; Top-level Entity Name              ; fpga_modbus                                ;
 ; Family                             ; Cyclone IV E                               ;
 ; Device                             ; EP4CE6F17C8                                ;
 ; Timing Models                      ; Final                                      ;
-; Total logic elements               ; 1,742 / 6,272 ( 28 % )                     ;
-;     Total combinational functions  ; 1,286 / 6,272 ( 21 % )                     ;
-;     Dedicated logic registers      ; 1,293 / 6,272 ( 21 % )                     ;
-; Total registers                    ; 1293                                       ;
-; Total pins                         ; 15 / 180 ( 8 % )                           ;
+; Total logic elements               ; 1,745 / 6,272 ( 28 % )                     ;
+;     Total combinational functions  ; 1,307 / 6,272 ( 21 % )                     ;
+;     Dedicated logic registers      ; 1,282 / 6,272 ( 20 % )                     ;
+; Total registers                    ; 1282                                       ;
+; Total pins                         ; 17 / 180 ( 9 % )                           ;
 ; Total virtual pins                 ; 0                                          ;
-; Total memory bits                  ; 1,536 / 276,480 ( < 1 % )                  ;
+; Total memory bits                  ; 768 / 276,480 ( < 1 % )                    ;
 ; Embedded Multiplier 9-bit elements ; 0 / 30 ( 0 % )                             ;
 ; Total PLLs                         ; 0 / 2 ( 0 % )                              ;
 +------------------------------------+--------------------------------------------+
@@ -64,7 +64,7 @@ applicable agreement for further details.
 +-------------------+---------------------+
 ; Option            ; Setting             ;
 +-------------------+---------------------+
-; Start date & time ; 11/11/2026 19:18:37 ;
+; Start date & time ; 11/17/2026 19:12:12 ;
 ; Main task         ; Compilation         ;
 ; Revision Name     ; fpga_modbus         ;
 +-------------------+---------------------+
@@ -75,7 +75,7 @@ applicable agreement for further details.
 +-------------------------------------+------------------------------------------------+---------------+-------------+------------------+
 ; Assignment Name                     ; Value                                          ; Default Value ; Entity Name ; Section Id       ;
 +-------------------------------------+------------------------------------------------+---------------+-------------+------------------+
-; COMPILER_SIGNATURE_ID               ; 269322047980111.179441391710480                ; --            ; --          ; --               ;
+; COMPILER_SIGNATURE_ID               ; 269322047980111.179493193202760                ; --            ; --          ; --               ;
 ; ENABLE_SIGNALTAP                    ; On                                             ; --            ; --          ; --               ;
 ; MAX_CORE_JUNCTION_TEMP              ; 85                                             ; --            ; --          ; --               ;
 ; MIN_CORE_JUNCTION_TEMP              ; 0                                              ; --            ; --          ; --               ;
@@ -92,24 +92,24 @@ applicable agreement for further details.
 ; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_NODE_INFO=805334528                        ; --            ; --          ; auto_signaltap_0 ;
 ; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_POWER_UP_TRIGGER=0                         ; --            ; --          ; auto_signaltap_0 ;
 ; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_STORAGE_QUALIFIER_INVERSION_MASK_LENGTH=0  ; --            ; --          ; auto_signaltap_0 ;
-; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_SEGMENT_SIZE=1024                          ; --            ; --          ; auto_signaltap_0 ;
 ; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_ATTRIBUTE_MEM_MODE=OFF                     ; --            ; --          ; auto_signaltap_0 ;
 ; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_STATE_FLOW_USE_GENERATED=0                 ; --            ; --          ; auto_signaltap_0 ;
 ; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_STATE_BITS=11                              ; --            ; --          ; auto_signaltap_0 ;
 ; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_BUFFER_FULL_STOP=1                         ; --            ; --          ; auto_signaltap_0 ;
 ; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_CURRENT_RESOURCE_WIDTH=1                   ; --            ; --          ; auto_signaltap_0 ;
 ; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_TRIGGER_LEVEL=1                            ; --            ; --          ; auto_signaltap_0 ;
-; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_SAMPLE_DEPTH=1024                          ; --            ; --          ; auto_signaltap_0 ;
 ; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_TRIGGER_IN_ENABLED=0                       ; --            ; --          ; auto_signaltap_0 ;
 ; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_ADVANCED_TRIGGER_ENTITY=basic,1,           ; --            ; --          ; auto_signaltap_0 ;
 ; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_TRIGGER_LEVEL_PIPELINE=1                   ; --            ; --          ; auto_signaltap_0 ;
 ; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_ENABLE_ADVANCED_TRIGGER=0                  ; --            ; --          ; auto_signaltap_0 ;
-; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_DATA_BITS=1                                ; --            ; --          ; auto_signaltap_0 ;
-; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_TRIGGER_BITS=1                             ; --            ; --          ; auto_signaltap_0 ;
+; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_SEGMENT_SIZE=128                           ; --            ; --          ; auto_signaltap_0 ;
+; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_SAMPLE_DEPTH=128                           ; --            ; --          ; auto_signaltap_0 ;
+; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_DATA_BITS=2                                ; --            ; --          ; auto_signaltap_0 ;
+; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_TRIGGER_BITS=2                             ; --            ; --          ; auto_signaltap_0 ;
 ; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_INVERSION_MASK=000000000000000000000000000 ; --            ; --          ; auto_signaltap_0 ;
 ; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_INVERSION_MASK_LENGTH=27                   ; --            ; --          ; auto_signaltap_0 ;
-; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_NODE_CRC_LOWORD=56723                      ; --            ; --          ; auto_signaltap_0 ;
-; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_NODE_CRC_HIWORD=56303                      ; --            ; --          ; auto_signaltap_0 ;
+; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_NODE_CRC_LOWORD=25604                      ; --            ; --          ; auto_signaltap_0 ;
+; SLD_NODE_PARAMETER_ASSIGNMENT       ; SLD_NODE_CRC_HIWORD=63340                      ; --            ; --          ; auto_signaltap_0 ;
 ; USE_SIGNALTAP_FILE                  ; output_files/stp1.stp                          ; --            ; --          ; --               ;
 +-------------------------------------+------------------------------------------------+---------------+-------------+------------------+
 
@@ -119,11 +119,11 @@ applicable agreement for further details.
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
 ; Module Name               ; Elapsed Time ; Average Processors Used ; Peak Virtual Memory ; Total CPU Time (on all processors) ;
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
-; Analysis & Synthesis      ; 00:00:09     ; 1.0                     ; 4711 MB             ; 00:00:09                           ;
-; Fitter                    ; 00:00:10     ; 1.3                     ; 5357 MB             ; 00:00:11                           ;
-; Assembler                 ; 00:00:01     ; 1.0                     ; 4595 MB             ; 00:00:01                           ;
-; TimeQuest Timing Analyzer ; 00:00:03     ; 1.0                     ; 4692 MB             ; 00:00:03                           ;
-; Total                     ; 00:00:23     ; --                      ; --                  ; 00:00:24                           ;
+; Analysis & Synthesis      ; 00:00:10     ; 1.0                     ; 4732 MB             ; 00:00:10                           ;
+; Fitter                    ; 00:00:09     ; 1.3                     ; 5372 MB             ; 00:00:11                           ;
+; Assembler                 ; 00:00:01     ; 1.0                     ; 4599 MB             ; 00:00:01                           ;
+; TimeQuest Timing Analyzer ; 00:00:03     ; 1.0                     ; 4701 MB             ; 00:00:03                           ;
+; Total                     ; 00:00:23     ; --                      ; --                  ; 00:00:25                           ;
 +---------------------------+--------------+-------------------------+---------------------+------------------------------------+
 
 
