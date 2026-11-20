@@ -23,7 +23,7 @@ applicable agreement for further details.
 	(input)
 	(rect 48 360 224 376)
 	(text "INPUT" (rect 133 0 161 10)(font "Arial" (font_size 6)))
-	(text "PROTECTIONS\n" (rect 5 0 83 24)(font "Arial" ))
+	(text "PROTECTIONS\n" (rect 5 0 82 24)(font "Arial" ))
 	(pt 176 8)
 	(drawing
 		(line (pt 92 12)(pt 117 12))
@@ -39,7 +39,7 @@ applicable agreement for further details.
 	(input)
 	(rect 56 152 240 168)
 	(text "INPUT" (rect 141 0 169 10)(font "Arial" (font_size 6)))
-	(text "TOP_CONTROL" (rect 5 0 86 12)(font "Arial" ))
+	(text "TOP_CONTROL" (rect 5 0 85 12)(font "Arial" ))
 	(pt 184 8)
 	(drawing
 		(line (pt 100 12)(pt 125 12))
@@ -55,7 +55,7 @@ applicable agreement for further details.
 	(input)
 	(rect 56 192 240 208)
 	(text "INPUT" (rect 141 0 169 10)(font "Arial" (font_size 6)))
-	(text "BOT_CONTROL" (rect 5 0 86 12)(font "Arial" ))
+	(text "BOT_CONTROL" (rect 5 0 85 12)(font "Arial" ))
 	(pt 184 8)
 	(drawing
 		(line (pt 100 12)(pt 125 12))
@@ -71,7 +71,7 @@ applicable agreement for further details.
 	(input)
 	(rect 48 304 216 320)
 	(text "INPUT" (rect 125 0 153 10)(font "Arial" (font_size 6)))
-	(text "EXC_TRIP" (rect 5 0 57 12)(font "Arial" ))
+	(text "EXC_TRIP" (rect 5 0 56 12)(font "Arial" ))
 	(pt 168 8)
 	(drawing
 		(line (pt 84 12)(pt 109 12))
@@ -87,7 +87,7 @@ applicable agreement for further details.
 	(input)
 	(rect 48 464 216 480)
 	(text "INPUT" (rect 125 0 153 10)(font "Arial" (font_size 6)))
-	(text "ERR_RESET" (rect 5 0 70 12)(font "Arial" ))
+	(text "ERR_RESET" (rect 5 0 69 12)(font "Arial" ))
 	(pt 168 8)
 	(drawing
 		(line (pt 84 12)(pt 109 12))
@@ -502,7 +502,7 @@ applicable agreement for further details.
 	(pt 392 160)
 )
 (junction (pt 696 208))
-(text "EXC_TRIP_IN" (rect 296 408 369 422)(font "Arial" (font_size 8)))
+(text "EXC_TRIP_IN" (rect 280 296 353 310)(font "Arial" (font_size 8)))
 (text "EXC_TRIP_SIG" (rect 480 376 562 390)(font "Arial" (font_size 8)))
 (text "OE2N" (rect 640 216 671 230)(font "Arial" (font_size 8)))
 (text "OE1N" (rect 504 224 535 238)(font "Arial" (font_size 8)))

@@ -1,5 +1,5 @@
 Analysis & Synthesis report for fpga_modbus
-Tue Nov 17 19:12:23 2026
+Thu Nov 19 22:39:31 2026
 Quartus II 64-Bit Version 13.1.0 Build 162 10/23/2013 SJ Web Edition
 
 
@@ -64,16 +64,16 @@ applicable agreement for further details.
 +---------------------------------------------------------------------------------+
 ; Analysis & Synthesis Summary                                                    ;
 +------------------------------------+--------------------------------------------+
-; Analysis & Synthesis Status        ; Successful - Tue Nov 17 19:12:22 2026      ;
+; Analysis & Synthesis Status        ; Successful - Thu Nov 19 22:39:31 2026      ;
 ; Quartus II 64-Bit Version          ; 13.1.0 Build 162 10/23/2013 SJ Web Edition ;
 ; Revision Name                      ; fpga_modbus                                ;
 ; Top-level Entity Name              ; fpga_modbus                                ;
 ; Family                             ; Cyclone IV E                               ;
-; Total logic elements               ; 2,074                                      ;
-;     Total combinational functions  ; 1,302                                      ;
+; Total logic elements               ; 2,067                                      ;
+;     Total combinational functions  ; 1,295                                      ;
 ;     Dedicated logic registers      ; 1,282                                      ;
 ; Total registers                    ; 1282                                       ;
-; Total pins                         ; 17                                         ;
+; Total pins                         ; 18                                         ;
 ; Total virtual pins                 ; 0                                          ;
 ; Total memory bits                  ; 768                                        ;
 ; Embedded Multiplier 9-bit elements ; 0                                          ;
@@ -255,29 +255,29 @@ applicable agreement for further details.
 +---------------------------------------------+-----------+
 ; Resource                                    ; Usage     ;
 +---------------------------------------------+-----------+
-; Estimated Total logic elements              ; 2,074     ;
+; Estimated Total logic elements              ; 2,067     ;
 ;                                             ;           ;
-; Total combinational functions               ; 1302      ;
+; Total combinational functions               ; 1295      ;
 ; Logic element usage by number of LUT inputs ;           ;
-;     -- 4 input functions                    ; 765       ;
-;     -- 3 input functions                    ; 250       ;
-;     -- <=2 input functions                  ; 287       ;
+;     -- 4 input functions                    ; 788       ;
+;     -- 3 input functions                    ; 218       ;
+;     -- <=2 input functions                  ; 289       ;
 ;                                             ;           ;
 ; Logic elements by mode                      ;           ;
-;     -- normal mode                          ; 1114      ;
+;     -- normal mode                          ; 1107      ;
 ;     -- arithmetic mode                      ; 188       ;
 ;                                             ;           ;
 ; Total registers                             ; 1282      ;
 ;     -- Dedicated logic registers            ; 1282      ;
 ;     -- I/O registers                        ; 0         ;
 ;                                             ;           ;
-; I/O pins                                    ; 17        ;
+; I/O pins                                    ; 18        ;
 ; Total memory bits                           ; 768       ;
 ; Embedded Multiplier 9-bit elements          ; 0         ;
 ; Maximum fan-out node                        ; clk~input ;
 ; Maximum fan-out                             ; 1025      ;
-; Total fan-out                               ; 9425      ;
-; Average fan-out                             ; 3.57      ;
+; Total fan-out                               ; 9426      ;
+; Average fan-out                             ; 3.58      ;
 +---------------------------------------------+-----------+
 
 
@@ -286,9 +286,9 @@ applicable agreement for further details.
 +---------------------------------------------------------------------------------------------------------+-------------------+--------------+-------------+--------------+---------+-----------+------+--------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+
 ; Compilation Hierarchy Node                                                                              ; LC Combinationals ; LC Registers ; Memory Bits ; DSP Elements ; DSP 9x9 ; DSP 18x18 ; Pins ; Virtual Pins ; Full Hierarchy Name                                                                                                                                                                                                                                                                                                                              ; Library Name ;
 +---------------------------------------------------------------------------------------------------------+-------------------+--------------+-------------+--------------+---------+-----------+------+--------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+--------------+
-; |fpga_modbus                                                                                            ; 1302 (43)         ; 1282 (32)    ; 768         ; 0            ; 0       ; 0         ; 17   ; 0            ; |fpga_modbus                                                                                                                                                                                                                                                                                                                                     ; work         ;
+; |fpga_modbus                                                                                            ; 1295 (43)         ; 1282 (32)    ; 768         ; 0            ; 0       ; 0         ; 18   ; 0            ; |fpga_modbus                                                                                                                                                                                                                                                                                                                                     ; work         ;
 ;    |key_jitter:u_key_jitter|                                                                            ; 30 (30)           ; 30 (30)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |fpga_modbus|key_jitter:u_key_jitter                                                                                                                                                                                                                                                                                                             ; work         ;
-;    |modbus_rtu_slave:u_modbus_rtu_slave|                                                                ; 687 (687)         ; 711 (711)    ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |fpga_modbus|modbus_rtu_slave:u_modbus_rtu_slave                                                                                                                                                                                                                                                                                                 ; work         ;
+;    |modbus_rtu_slave:u_modbus_rtu_slave|                                                                ; 680 (680)         ; 711 (711)    ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |fpga_modbus|modbus_rtu_slave:u_modbus_rtu_slave                                                                                                                                                                                                                                                                                                 ; work         ;
 ;    |sld_hub:auto_hub|                                                                                   ; 121 (1)           ; 90 (0)       ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |fpga_modbus|sld_hub:auto_hub                                                                                                                                                                                                                                                                                                                    ; work         ;
 ;       |sld_jtag_hub:\jtag_hub_gen:sld_jtag_hub_inst|                                                    ; 120 (82)          ; 90 (62)      ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |fpga_modbus|sld_hub:auto_hub|sld_jtag_hub:\jtag_hub_gen:sld_jtag_hub_inst                                                                                                                                                                                                                                                                       ; work         ;
 ;          |sld_rom_sr:hub_info_reg|                                                                      ; 21 (21)           ; 9 (9)        ; 0           ; 0            ; 0       ; 0         ; 0    ; 0            ; |fpga_modbus|sld_hub:auto_hub|sld_jtag_hub:\jtag_hub_gen:sld_jtag_hub_inst|sld_rom_sr:hub_info_reg                                                                                                                                                                                                                                               ; work         ;
@@ -439,12 +439,12 @@ Encoding Type:  One-Hot
 ; modbus_rtu_slave:u_modbus_rtu_slave|request_crc[2]                                                                                                                            ; 2       ;
 ; modbus_rtu_slave:u_modbus_rtu_slave|request_crc[1]                                                                                                                            ; 3       ;
 ; modbus_rtu_slave:u_modbus_rtu_slave|request_crc[0]                                                                                                                            ; 3       ;
-; modbus_rtu_slave:u_modbus_rtu_slave|rx_sync                                                                                                                                   ; 23      ;
+; modbus_rtu_slave:u_modbus_rtu_slave|rx_sync                                                                                                                                   ; 22      ;
 ; modbus_rtu_slave:u_modbus_rtu_slave|rx_meta                                                                                                                                   ; 1       ;
 ; uart_interface:u_uart_interface|uart_rx:u_uart_rx|rx_sync_d                                                                                                                   ; 1       ;
-; modbus_rtu_slave:u_modbus_rtu_slave|coils[2]                                                                                                                                  ; 2       ;
-; modbus_rtu_slave:u_modbus_rtu_slave|coils[1]                                                                                                                                  ; 2       ;
 ; modbus_rtu_slave:u_modbus_rtu_slave|coils[3]                                                                                                                                  ; 2       ;
+; modbus_rtu_slave:u_modbus_rtu_slave|coils[1]                                                                                                                                  ; 2       ;
+; modbus_rtu_slave:u_modbus_rtu_slave|coils[2]                                                                                                                                  ; 2       ;
 ; key_jitter:u_key_jitter|key_sync                                                                                                                                              ; 1       ;
 ; key_jitter:u_key_jitter|key_meta                                                                                                                                              ; 1       ;
 ; sld_hub:auto_hub|sld_jtag_hub:\jtag_hub_gen:sld_jtag_hub_inst|tdo                                                                                                             ; 1       ;
@@ -521,7 +521,7 @@ Encoding Type:  One-Hot
 ; 4:1                ; 5 bits    ; 10 LEs        ; 5 LEs                ; 5 LEs                  ; Yes        ; |fpga_modbus|sld_hub:auto_hub|sld_jtag_hub:\jtag_hub_gen:sld_jtag_hub_inst|mixer_addr_reg[4]                       ;
 ; 5:1                ; 5 bits    ; 15 LEs        ; 5 LEs                ; 10 LEs                 ; Yes        ; |fpga_modbus|sld_hub:auto_hub|sld_jtag_hub:\jtag_hub_gen:sld_jtag_hub_inst|sld_rom_sr:hub_info_reg|word_counter[0] ;
 ; 6:1                ; 9 bits    ; 36 LEs        ; 9 LEs                ; 27 LEs                 ; Yes        ; |fpga_modbus|sld_hub:auto_hub|sld_jtag_hub:\jtag_hub_gen:sld_jtag_hub_inst|irsr_reg[2]                             ;
-; 34:1               ; 4 bits    ; 88 LEs        ; 60 LEs               ; 28 LEs                 ; Yes        ; |fpga_modbus|sld_hub:auto_hub|sld_jtag_hub:\jtag_hub_gen:sld_jtag_hub_inst|design_hash_reg[0]                      ;
+; 34:1               ; 4 bits    ; 88 LEs        ; 56 LEs               ; 32 LEs                 ; Yes        ; |fpga_modbus|sld_hub:auto_hub|sld_jtag_hub:\jtag_hub_gen:sld_jtag_hub_inst|design_hash_reg[0]                      ;
 ; 20:1               ; 4 bits    ; 52 LEs        ; 32 LEs               ; 20 LEs                 ; Yes        ; |fpga_modbus|sld_hub:auto_hub|sld_jtag_hub:\jtag_hub_gen:sld_jtag_hub_inst|sld_rom_sr:hub_info_reg|WORD_SR[0]      ;
 +--------------------+-----------+---------------+----------------------+------------------------+------------+--------------------------------------------------------------------------------------------------------------------+
 
@@ -613,7 +613,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 ; SLAVE_ID       ; 00000001         ; Unsigned Binary                              ;
 ; COIL_COUNT     ; 16               ; Signed Integer                               ;
 ; HOLDING_COUNT  ; 32               ; Signed Integer                               ;
-; INPUT_COUNT    ; 2                ; Signed Integer                               ;
+; INPUT_COUNT    ; 3                ; Signed Integer                               ;
 ; COILS_INIT     ; 0000001011101110 ; Unsigned Binary                              ;
 +----------------+------------------+----------------------------------------------+
 Note: In order to hide this table in the UI and the text report file, please set the "Show Parameter Settings in Synthesis Report" option in "Analysis and Synthesis Settings -> More Settings" to "Off".
@@ -768,6 +768,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 ; coils[15..10]        ; Output ; Info     ; Connected to dangling logic. Logic that only feeds a dangling port will be removed. ;
 ; coils[4..0]          ; Output ; Info     ; Connected to dangling logic. Logic that only feeds a dangling port will be removed. ;
 ; holding_values       ; Output ; Info     ; Connected to dangling logic. Logic that only feeds a dangling port will be removed. ;
+; input_values[47..33] ; Input  ; Info     ; Stuck at GND                                                                        ;
 ; input_values[31..17] ; Input  ; Info     ; Stuck at GND                                                                        ;
 ; input_values[15..1]  ; Input  ; Info     ; Stuck at GND                                                                        ;
 +----------------------+--------+----------+-------------------------------------------------------------------------------------+
@@ -805,7 +806,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 +------------------+--------------+
 ; Partition Name   ; Elapsed Time ;
 +------------------+--------------+
-; Top              ; 00:00:03     ;
+; Top              ; 00:00:04     ;
 ; sld_hub:auto_hub ; 00:00:00     ;
 +------------------+--------------+
 
@@ -829,7 +830,7 @@ Note: In order to hide this table in the UI and the text report file, please set
 Info: *******************************************************************
 Info: Running Quartus II 64-Bit Analysis & Synthesis
     Info: Version 13.1.0 Build 162 10/23/2013 SJ Web Edition
-    Info: Processing started: Tue Nov 17 19:12:12 2026
+    Info: Processing started: Thu Nov 19 22:39:19 2026
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off fpga_modbus -c fpga_modbus
 Info (20030): Parallel compilation is enabled and will use 4 of the 4 processors detected
 Info (12021): Found 1 design units, including 1 entities, in source file rtl/led_blink.v
@@ -939,15 +940,15 @@ Info (16010): Generating hard_block partition "hard_block:auto_generated_inst"
     Info (16011): Adding 0 node(s), including 0 DDIO, 0 PLL, 0 transceiver and 0 LCELL
 Warning (21074): Design contains 1 input pin(s) that do not drive logic
     Warning (15610): No output dependent on input pin "key1"
-Info (21057): Implemented 2148 device resources after synthesis - the final resource count might be different
-    Info (21058): Implemented 10 input pins
+Info (21057): Implemented 2142 device resources after synthesis - the final resource count might be different
+    Info (21058): Implemented 11 input pins
     Info (21059): Implemented 11 output pins
-    Info (21061): Implemented 2116 logic cells
+    Info (21061): Implemented 2109 logic cells
     Info (21064): Implemented 10 RAM segments
 Info: Quartus II 64-Bit Analysis & Synthesis was successful. 0 errors, 13 warnings
-    Info: Peak virtual memory: 4732 megabytes
-    Info: Processing ended: Tue Nov 17 19:12:23 2026
-    Info: Elapsed time: 00:00:11
-    Info: Total CPU time (on all processors): 00:00:11
+    Info: Peak virtual memory: 4720 megabytes
+    Info: Processing ended: Thu Nov 19 22:39:31 2026
+    Info: Elapsed time: 00:00:12
+    Info: Total CPU time (on all processors): 00:00:12
 
 

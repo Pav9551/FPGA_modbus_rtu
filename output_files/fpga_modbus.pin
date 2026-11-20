@@ -102,7 +102,7 @@ GND                          : B15       : gnd    :                   :         
 RESERVED_INPUT_WITH_WEAK_PULLUP : B16       :        :                   :         : 6         :                
 ~ALTERA_ASDO_DATA1~ / RESERVED_INPUT_WITH_WEAK_PULLUP : C1        : input  : 3.3-V LVTTL       :         : 1         : N              
 RESERVED_INPUT_WITH_WEAK_PULLUP : C2        :        :                   :         : 1         :                
-Pin_C6                       : C3        : output : 3.3-V LVTTL       :         : 8         : Y              
+Pin_C16                      : C3        : output : 3.3-V LVTTL       :         : 8         : Y              
 VCCIO8                       : C4        : power  :                   : 3.3V    : 8         :                
 GND                          : C5        : gnd    :                   :         :           :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : C6        :        :                   :         : 8         :                
@@ -261,7 +261,7 @@ VCCIO5                       : M14       : power  :                   : 3.3V    
 GND+                         : M15       :        :                   :         : 5         :                
 clk                          : M16       : input  : 3.3-V LVTTL       :         : 5         : Y              
 RESERVED_INPUT_WITH_WEAK_PULLUP : N1        :        :                   :         : 2         :                
-RESERVED_INPUT_WITH_WEAK_PULLUP : N2        :        :                   :         : 2         :                
+Pin_B20                      : N2        : input  : 3.3-V LVTTL       :         : 2         : Y              
 RESERVED_INPUT_WITH_WEAK_PULLUP : N3        :        :                   :         : 3         :                
 VCCD_PLL1                    : N4        : power  :                   : 1.2V    :           :                
 RESERVED_INPUT_WITH_WEAK_PULLUP : N5        :        :                   :         : 3         :                

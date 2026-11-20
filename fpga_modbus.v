@@ -13,7 +13,7 @@ module fpga_modbus (
 /*	| PIN | CRATE |
 	|-----|-------|
 	| D4  |  C5   |
-	| C3  |  C6   |
+	| C3  |  C16   |
 	| D3  |  C7   |
 	| D5  |  C8   |
 	| E5  |  C9   |
@@ -26,10 +26,10 @@ module fpga_modbus (
 	| XX  |  C15  |
 	| XX  |  C16  |
 	| P1  |  B18  |
-	| XX  |  C18  |
+	| R1  |  B19  |
 	| XX  |  C24  |*/
 	output Pin_C5,
-	output Pin_C6,
+	output Pin_C16,
 	output Pin_C7,
 	output Pin_C8,
 	output Pin_C9,
@@ -38,7 +38,8 @@ module fpga_modbus (
 	output Pin_C12,
 	
 	input Pin_B18,
-	input Pin_B19
+	input Pin_B19,
+	input Pin_B20
 	
 );
 
@@ -106,7 +107,7 @@ module fpga_modbus (
     // ============================================================
     // Данные устройства.
     // ============================================================
-	 localparam integer INPUT_COUNT = 2;
+	 localparam integer INPUT_COUNT = 3;
 
 	 wire [INPUT_COUNT*16-1:0] input_values;
 
@@ -119,6 +120,9 @@ module fpga_modbus (
 
 	 // Input-регистр 1 — BC.
 	 assign input_values[1*16 +: 16] = {15'b0, Pin_B19};
+	 
+	 // Input-регистр 2 — TR.
+	 assign input_values[2*16 +: 16] = {15'b0, Pin_B20};
 
     wire [COIL_COUNT-1:0] coils;
 
@@ -134,12 +138,12 @@ module fpga_modbus (
     .TC         (tc_status),
     .BC         (bc_status)
     );
-	 //assign coils[0] = blink_out;
+	 //assign Pin_C8 = blink_out;
 	 assign Pin_C5 = coils[5];
-	 assign Pin_C6 = coils[6];//+Pin_C16
+	 assign Pin_C16 = coils[6];//Pin_C16
 	 assign Pin_C7 = coils[7];
 	 assign Pin_C8 = coils[8];
-	 assign Pin_C9 = coils[9];//+Pin_C26
+	 assign Pin_C9 = coils[9];//Pin_C9+Pin_C26
 	 //assign Pin_C10 = 8'd0;
 	 //assign Pin_C11 = coils[11];
 	 //assign Pin_C12 = coils[12];
