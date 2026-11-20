@@ -1,0 +1,22 @@
+    // ============================================================
+    // Мигание Pin_C10: 0,5 с высокий уровень, 0,5 с низкий.
+    // CLK_FRE задаётся в МГц.
+    // ============================================================
+    localparam integer BLINK_HALF_PERIOD = CLK_FRE * 500_000;
+
+    reg [31:0] blink_counter;
+    reg        blink_state;
+
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            blink_counter <= 32'd0;
+            blink_state   <= 1'b0;
+        end else begin
+            if (blink_counter == BLINK_HALF_PERIOD - 1) begin
+                blink_counter <= 32'd0;
+                blink_state   <= ~blink_state;
+            end else begin
+                blink_counter <= blink_counter + 32'd1;
+            end
+        end
+    end
