@@ -58,11 +58,23 @@ module fpga_modbus (
     // COIL_COUNT = 16    -> адреса 0...15
     // HOLDING_COUNT = 32 -> адреса 0...31
     // ============================================================
-    localparam integer COIL_COUNT    = 16;
-    localparam integer HOLDING_COUNT = 32;
-    // Инициализация
-	 localparam [COIL_COUNT-1:0] COILS_INIT =
-    16'b0000_0010_1110_1110;
+	 localparam integer COIL_COUNT    = 32;
+	 localparam integer HOLDING_COUNT = 32;
+
+	 // Начальные состояния COIL 0–15.
+	 localparam [15:0] COILS_INIT_LOW =
+		 16'b0000_0010_1110_1110;
+
+	 // Начальные состояния COIL 16–31.
+	 // Пример: все включены.
+	 localparam [15:0] COILS_INIT_HIGH =
+		 16'b0000_0010_1111_1011;
+
+	 // Объединяем в один 32-битный вектор.
+	 localparam [COIL_COUNT-1:0] COILS_INIT = {
+		 COILS_INIT_HIGH,
+		 COILS_INIT_LOW
+	 };
 
     // ============================================================
     // Кнопка key0.
@@ -107,12 +119,13 @@ module fpga_modbus (
     // ============================================================
     // Данные устройства.
     // ============================================================
-	 localparam integer INPUT_COUNT = 3;
+	 localparam integer INPUT_COUNT = 13;
 
 	 wire [INPUT_COUNT*16-1:0] input_values;
 
 	 wire tc_status;
 	 wire bc_status;
+	 wire tr_status;
 
 	 // Input-регистр 0 — TC.
 	 //assign input_values[0*16 +: 16] = {15'b0, tc_status};
@@ -123,6 +136,18 @@ module fpga_modbus (
 	 
 	 // Input-регистр 2 — TR.
 	 assign input_values[2*16 +: 16] = {15'b0, Pin_B20};
+	 
+	 // Input-регистр 10 — TС.
+	 assign input_values[10*16 +: 16] = {15'b0, tc_status};
+	 
+	 // Input-регистр 11 — BC.
+	 assign input_values[11*16 +: 16] = {15'b0, bc_status};
+	 
+	 // Input-регистр 12 — TR.
+	 assign input_values[12*16 +: 16] = {15'b0, tr_status};
+	 
+	 
+	 
 
     wire [COIL_COUNT-1:0] coils;
 
@@ -130,13 +155,15 @@ module fpga_modbus (
 	 // Светодиод показывает выход TC блока управления возбуждением.
 	 //assign led = coils[5];
 	 //assign coils[10] = tc_status;
-	 generator_excitation_control u_excitation (
-    .BOT_CONTROL (coils[6]),
-    .TOP_CONTROL (coils[7]),
-    .EXC_TRIP    (coils[8]),
-    .PROTECTIONS(coils[9]),
+	 generator_excitation_control u_excitation ( 
+	 .ERR_RESET   (coils[15]),
+    .TOP_CONTROL (coils[16]),
+	 .BOT_CONTROL (coils[17]),
+    .EXC_TRIP    (coils[18]),
+    .PROTECTIONS(coils[19]),
     .TC         (tc_status),
-    .BC         (bc_status)
+    .BC         (bc_status),
+	 .TR         (tr_status),
     );
 	 //assign Pin_C8 = blink_out;
 	 assign Pin_C5 = coils[5];
